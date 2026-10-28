@@ -473,8 +473,8 @@ function WorkspaceIcon({ name, size = 28 }) {
   return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.55" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{p[name]}</svg>
 }
 
-function WorkspaceBrand({ to = '/dashboard' }) {
-  return <a href={to} className="hf-workspace-brand" aria-label="Hyper Flex dashboard">
+function WorkspaceBrand({ to = '/' }) {
+  return <a href={to} className="hf-workspace-brand" aria-label="Hyper Flex home">
     <span className="hf-workspace-mark"><LightningLogo /></span>
     <span className="hf-workspace-wordmark">Hyper <strong>Flex</strong></span>
   </a>
@@ -495,7 +495,7 @@ function AccountPage({ login = false }) {
   }
   return <div className="hf-app-page hf-auth-page">
     <div className="hf-grid-background" aria-hidden="true" />
-    <header className="hf-app-topbar"><a className="hf-back-link" href="/">← Back to website</a><WorkspaceBrand /></header>
+    <header className="hf-app-topbar"><a className="hf-back-link" href="/"><svg className="back-chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6" /></svg> Back to website</a><WorkspaceBrand /></header>
     <main className="hf-auth-center">
       <div className="hf-auth-intro"><div className="hf-auth-symbol"><LightningLogo /></div><span className="hf-overline">YOUR NEXT CHAPTER</span><h1>{login ? 'Welcome back.' : 'Get started with Hyper Flex.'}</h1><p>A smarter workspace begins here.</p></div>
       <form className="hf-auth-card" onSubmit={submit}>
@@ -596,7 +596,7 @@ function ReferralsTool() {
 }
 const seedNotifications=[{id:1,type:'update',title:'Welcome to Hyper Flex',body:'Your new workspace is ready to explore.',time:'Today · 9:15 AM',read:false},{id:2,type:'info',title:'New analytics preview',body:'Explore daily and monthly earnings charts with sample data.',time:'Today · 8:40 AM',read:false},{id:3,type:'notice',title:'Request preferences',body:'Station filters and scheduling options are now available in the Requests preview.',time:'Yesterday · 6:30 PM',read:false},{id:4,type:'update',title:'Workspace update',body:'We refreshed the dashboard layout and service navigation.',time:'Oct 20 · 11:10 AM',read:true},{id:5,type:'info',title:'Security reminder',body:'Never share your account password or verification codes.',time:'Oct 18 · 10:00 AM',read:true}]
 function InboxTool(){const [items,setItems]=useState(seedNotifications);const [filter,setFilter]=useState('all');const filtered=items.filter(x=>filter==='all'||(filter==='unread'?!x.read:x.type===filter));const unread=items.filter(x=>!x.read).length;return <div className="hf-tool-stack"><div className="hf-toolbar"><div className="hf-segmented">{['all','unread','update','info'].map(x=><button key={x} className={filter===x?'active':''} onClick={()=>setFilter(x)}>{x==='all'?'All':x==='unread'?'Unread':x==='update'?'Updates':'Info'}</button>)}</div><button className="hf-outline-btn" onClick={()=>setItems(old=>old.map(x=>({...x,read:true})))}>Mark all read</button></div><div className="hf-metrics-grid hf-three-metrics"><Metric label="All messages" value={items.length}/><Metric label="Unread" value={unread}/><Metric label="Updates" value={items.filter(x=>x.type==='update').length}/></div><ServicePanel title="Notification center" note="Product messages and workspace announcements."><div className="hf-inbox-list">{filtered.length===0?<p className="hf-empty-state">You're all caught up. No messages in this view.</p>:filtered.map(n=><button className={`hf-inbox-item ${n.read?'':'unread'}`} key={n.id} onClick={()=>setItems(old=>old.map(x=>x.id===n.id?{...x,read:true}:x))}><span className="hf-inbox-icon"><WorkspaceIcon name={n.type==='update'?'bolt':n.type==='info'?'mail':'requests'} size={22}/></span><span className="hf-inbox-copy"><strong>{n.title}</strong><span>{n.body}</span><small>{n.time}</small></span>{!n.read&&<span className="hf-unread-indicator"/>}</button>)}</div></ServicePanel></div>}
-function SettingsTool(){const [linked,setLinked]=useState(false);const [email,setEmail]=useState(true);const [sms,setSms]=useState(false);const [timezone,setTimezone]=useState('America/Los_Angeles');const [flexArea,setFlexArea]=useState('Seattle, WA');const [showPass,setShowPass]=useState(false);const [message,setMessage]=useState('');return <div className="hf-tool-stack"><ServicePanel title="Connected accounts" note="Manage your account connection status."><div className="hf-setting-row"><div className="hf-setting-with-icon"><span className="hf-tool-icon"><WorkspaceIcon name="shield" size={23}/></span><div><b>Amazon Flex account</b><small>Status: <span className={linked?'hf-positive':''}>{linked?'Linked (preview)':'Not linked'}</span></small></div></div><button className="hf-solid-btn" onClick={()=>{setLinked(x=>!x);setMessage('Demo status updated. No account credentials were used.')}}>{linked?'Unlink account':'Link your Amazon account'}</button></div><p className="hf-small-note">This is a simulated connection. Do not enter Amazon credentials here.</p></ServicePanel><div className="hf-tool-two"><ServicePanel title="Security" note="Manage your sign-in preferences."><button className="hf-setting-link" onClick={()=>setShowPass(x=>!x)}><span>Change password</span><span>{showPass?'−':'↗'}</span></button>{showPass&&<form className="hf-settings-form" onSubmit={e=>{e.preventDefault();setMessage('Password change is a UI preview only.');setShowPass(false)}}><input type="password" placeholder="Current password" required/><input type="password" placeholder="New password" minLength={8} required/><button className="hf-solid-btn">Save password</button></form>}<div className="hf-setting-row"><div><b>Account protection</b><small>Security reminders enabled</small></div><span className="hf-demo-tag">ACTIVE</span></div></ServicePanel><ServicePanel title="Notifications" note="Choose how you want to hear from us."><div className="hf-setting-row"><div><b>Email notifications</b><small>Updates and important notices</small></div><DemoSwitch checked={email} onChange={setEmail} label="Email notifications"/></div><div className="hf-setting-row"><div><b>SMS notifications</b><small>Text message updates</small></div><DemoSwitch checked={sms} onChange={setSms} label="SMS notifications"/></div></ServicePanel></div><div className="hf-tool-two"><ServicePanel title="Region & timezone" note="Customize your local workspace."><label className="hf-tool-field">Timezone<select value={timezone} onChange={e=>setTimezone(e.target.value)}><option value="America/Los_Angeles">Pacific Time (PT)</option><option value="America/Denver">Mountain Time (MT)</option><option value="America/Chicago">Central Time (CT)</option><option value="America/New_York">Eastern Time (ET)</option></select></label><label className="hf-tool-field">Flex location<select value={flexArea} onChange={e=>setFlexArea(e.target.value)}><option>Seattle, WA</option><option>Bellevue, WA</option><option>Tacoma, WA</option><option>Everett, WA</option></select></label><button className="hf-outline-btn" onClick={()=>setMessage('Region preferences saved for this preview.')}>Update preferences</button></ServicePanel><ServicePanel title="Hyper Flex app" note="Take your workspace wherever you go."><div className="hf-app-install"><span className="hf-tool-icon"><LightningLogo/></span><div><b>Hyper Flex for mobile</b><small>Mobile experience · Coming soon</small></div></div><button className="hf-solid-btn" onClick={()=>setMessage('The mobile app is not available for installation yet.')}>Install app ↗</button><p className="hf-small-note">App download will be available when a release is published.</p></ServicePanel></div>{message&&<p className="hf-tool-feedback" role="status">{message}</p>}</div>}
+function SettingsTool(){const [linked,setLinked]=useState(false);const [email,setEmail]=useState(true);const [sms,setSms]=useState(false);const [timezone,setTimezone]=useState('America/Los_Angeles');const [flexArea,setFlexArea]=useState('Seattle, WA');const [showPass,setShowPass]=useState(false);const [message,setMessage]=useState('');return <div className="hf-tool-stack"><ServicePanel title="Connected accounts" note="Manage your account connection status."><div className="hf-setting-row"><div className="hf-setting-with-icon"><span className="hf-tool-icon"><WorkspaceIcon name="shield" size={23}/></span><div><b>Amazon Flex account</b><small>Status: <span className={linked?'hf-positive':''}>{linked?'Linked (preview)':'Not linked'}</span></small></div></div><button className="hf-solid-btn" onClick={()=>{setLinked(x=>!x);setMessage('Demo status updated. No account credentials were used.')}}>{linked?'Unlink account':'Link your Amazon account'}</button></div><p className="hf-small-note">This is a simulated connection. Do not enter Amazon credentials here.</p></ServicePanel><div className="hf-tool-two"><ServicePanel title="Security" note="Manage your sign-in preferences."><button className="hf-setting-link" onClick={()=>setShowPass(x=>!x)}><span>Change password</span><span>{showPass?'−':'↗'}</span></button>{showPass&&<form className="hf-settings-form" onSubmit={e=>{e.preventDefault();setMessage('Password change is a UI preview only.');setShowPass(false)}}><input type="password" placeholder="Current password" required/><input type="password" placeholder="New password" minLength={8} required/><button className="hf-solid-btn">Save password</button></form>}<div className="hf-setting-row"><div><b>Account protection</b><small>Security reminders enabled</small></div><span className="hf-demo-tag">ACTIVE</span></div></ServicePanel><ServicePanel title="Notifications" note="Choose how you want to hear from us."><div className="hf-setting-row"><div><b>Email notifications</b><small>Updates and important notices</small></div><DemoSwitch checked={email} onChange={setEmail} label="Email notifications"/></div><div className="hf-setting-row"><div><b>SMS notifications</b><small>Text message updates</small></div><DemoSwitch checked={sms} onChange={setSms} label="SMS notifications"/></div></ServicePanel></div><div className="hf-tool-two"><ServicePanel title="Region & timezone" note="Customize your local workspace."><label className="hf-tool-field">Timezone<select value={timezone} onChange={e=>setTimezone(e.target.value)}><option value="America/Los_Angeles">Pacific Time (PT)</option><option value="America/Denver">Mountain Time (MT)</option><option value="America/Chicago">Central Time (CT)</option><option value="America/New_York">Eastern Time (ET)</option></select></label><label className="hf-tool-field">Flex location<select value={flexArea} onChange={e=>setFlexArea(e.target.value)}><option>Seattle, WA</option><option>Bellevue, WA</option><option>Tacoma, WA</option><option>Everett, WA</option></select></label><button className="hf-outline-btn" onClick={()=>setMessage('Region preferences saved for this preview.')}>Update preferences</button></ServicePanel><ServicePanel title="Hyper Flex on your phone" note="Add the web app to your home screen."><div className="hf-app-install"><span className="hf-tool-icon"><LightningLogo/></span><div><b>Hyper Flex web app</b><small>Works on iOS and Android · No install needed</small></div></div><button className="hf-solid-btn" onClick={()=>setMessage('On iPhone: tap Share, then Add to Home Screen. On Android: open the menu, then Add to Home screen.')}>Add to Home Screen</button><p className="hf-small-note">Hyper Flex runs in your browser. Add it to your home screen for a full-screen shortcut on any device. No app store, no download.</p></ServicePanel></div>{message&&<p className="hf-tool-feedback" role="status">{message}</p>}</div>}
 function ServiceContent({ id }) {switch(id){case 'instant-offers':return <InstantOffersTool/>;case 'earnings':return <EarningsTool/>;case 'requests':return <RequestsTool/>;case 'referrals':return <ReferralsTool/>;case 'inbox':return <InboxTool/>;case 'settings':return <SettingsTool/>;default:return null}}
 
 function DashboardPage() {
@@ -604,7 +604,7 @@ function DashboardPage() {
   const selected = workspaceItems.find(item => item.id === active)
   return <div className="hf-app-page hf-dashboard-page">
     <div className="hf-grid-background" aria-hidden="true" />
-    <header className="hf-app-topbar hf-dashboard-topbar"><a href="/" className="hf-back-link">← Website</a><WorkspaceBrand /></header>
+    <header className="hf-app-topbar hf-dashboard-topbar"><a href="/" className="hf-back-link"><svg className="back-chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6" /></svg> Website</a><WorkspaceBrand /></header>
     <main className="hf-dashboard-main">
       <div className="hf-dashboard-kicker"><span className="hf-dashboard-pulse" /> HYPER FLEX / WORKSPACE</div>
       <div className="hf-dashboard-heading"><div><h1>Your space. <span>Your flow.</span></h1><p>Everything you need, in one beautifully simple place.</p></div><span className="hf-preview-pill">● UI PREVIEW</span></div>
@@ -614,7 +614,7 @@ function DashboardPage() {
           <span className="hf-service-card-body"><span className="hf-service-eyebrow">{item.eyebrow}</span><strong>{item.title}</strong><span className="hf-service-description">{item.description}</span></span>
           <span className="hf-service-card-bottom"><span>OPEN WORKSPACE</span><span className="hf-service-arrow">↗</span></span>
         </button>)}
-      </div></> : <div className="hf-tool-detail"><button type="button" className="hf-detail-back" onClick={() => setActive(null)}>← All services</button><div className="hf-tool-heading"><div className="hf-detail-icon"><WorkspaceIcon name={selected.icon} size={30}/></div><div><span className="hf-overline">{selected.eyebrow}</span><h2>{selected.title}</h2><p>{selected.description}</p></div></div><ServiceContent key={active} id={active}/></div>}
+      </div></> : <div className="hf-tool-detail"><button type="button" className="hf-detail-back" onClick={() => setActive(null)}><svg className="back-chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6" /></svg> All services</button><div className="hf-tool-heading"><div className="hf-detail-icon"><WorkspaceIcon name={selected.icon} size={30}/></div><div><span className="hf-overline">{selected.eyebrow}</span><h2>{selected.title}</h2><p>{selected.description}</p></div></div><ServiceContent key={active} id={active}/></div>}
       <footer className="hf-dashboard-footer"><span>© {new Date().getFullYear()} Hyper Flex</span><span>INDEPENDENT UI CONCEPT</span></footer>
     </main>
   </div>
@@ -641,7 +641,7 @@ function LandingPage() {
 
       <div className="header-wrap">
         <header className="navbar">
-          <a className="brand" href="/dashboard">
+          <a className="brand" href="/">
             <LightningLogo />
             <span className="brand-name">
               Hyper <b>Flex</b>
@@ -707,7 +707,7 @@ function LandingPage() {
 
           <a className="primary-button" href="/signup">
             <span className="button-label">{t.start}</span>
-            <span className="button-arrow">↗</span>
+            <span className="button-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17 17 7M9 7h8v8" /></svg></span>
           </a>
 
           <div className="hero-note">{t.note}</div>
@@ -933,7 +933,7 @@ function LandingPage() {
 
           <a href="/signup" className="primary-button">
             <span>{t.finalButton}</span>
-            <span className="button-arrow">↗</span>
+            <span className="button-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17 17 7M9 7h8v8" /></svg></span>
           </a>
         </div>
       </section>
@@ -951,9 +951,7 @@ function LandingPage() {
 
           <span>© {new Date().getFullYear()} Hyper Flex</span>
 
-          <span className="footer-disclaimer">
-            Independent educational UI prototype
-          </span>
+          <a className="footer-disclaimer" href="/terms">Terms and Conditions</a>
         </div>
       </footer>
     </div>
