@@ -621,7 +621,13 @@ function DashboardPage() {
 }
 
 function LandingPage() {
-  const [language, setLanguage] = useState('EN')
+  const [language, setLanguage] = useState(() => {
+    try {
+      return localStorage.getItem('hf-language') || 'EN'
+    } catch {
+      return 'EN'
+    }
+  })
   const [menuOpen, setMenuOpen] = useState(false)
   const [weeks, setWeeks] = useState(4)
   const [weeklyAmount, setWeeklyAmount] = useState(1000)
@@ -655,6 +661,17 @@ function LandingPage() {
             <a href="#faq" onClick={() => setMenuOpen(false)}>
               {t.faq}
             </a>
+            <div className="nav-lang-mobile">
+              <select
+                id="nav-lang-mobile"
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+              >
+                <option value="EN">EN · English</option>
+                <option value="ES">ES · Español</option>
+                <option value="RU">RU · Русский</option>
+              </select>
+            </div>
           </nav>
 
           <div className="nav-actions">

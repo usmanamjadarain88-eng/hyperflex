@@ -977,7 +977,7 @@ h1 {
   }
 
   .brand-name {
-    font-size: 18px;
+    font-size: 15px;
   }
 
   .nav-links {
@@ -1015,22 +1015,28 @@ h1 {
     border-bottom: 0;
   }
 
+  .navbar {
+    gap: 6px;
+  }
+
   .nav-actions {
-    gap: 8px;
+    gap: 5px;
   }
 
   .nav-actions select {
-    width: 55px;
-    font-size: 12px;
-  }
-
-  .login {
     display: none;
   }
 
-  .signup {
-    width: 85px;
+  .login {
+    display: inline-block;
     font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .signup {
+    width: 68px;
+    font-size: 11px;
+    padding: 0 6px;
   }
 
   .menu-button {
@@ -1141,24 +1147,33 @@ h1 {
 
 @media (max-width: 380px) {
   .brand-name {
-    font-size: 16px;
+    font-size: 14px;
+  }
+
+  .nav-actions select {
+    display: none;
   }
 
   .signup {
-    width: 76px;
-    font-size: 11px;
+    width: 60px;
+    font-size: 10.5px;
+    padding: 0 4px;
   }
 
   .nav-actions {
-    gap: 5px;
+    gap: 4px;
+  }
+
+  .login {
+    font-size: 11px;
   }
 
   h1 {
-    font-size: 36px;
+    font-size: 32px;
   }
 
   .calculator-total {
-    font-size: 42px;
+    font-size: 38px;
   }
 }
 
@@ -1390,5 +1405,42 @@ textarea::-moz-selection {
   .nav-mobile-signup {
     color: #d83aff;
     font-weight: 700;
+  }
+}
+
+/* =====================================================
+   LANGUAGE SELECTOR — inside mobile hamburger menu
+   ===================================================== */
+
+/* Dark native dropdowns everywhere (fixes white background) */
+select {
+  color-scheme: dark;
+}
+
+select option {
+  background: #191125;
+  color: #ffffff;
+}
+
+/* Hidden on desktop; shown inside the open hamburger on mobile */
+.nav-lang-mobile {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .nav-links.open .nav-lang-mobile {
+    display: block;
+    margin-top: 10px;
+  }
+
+  .nav-lang-mobile select {
+    width: 100%;
+    height: 44px;
+    padding: 0 12px;
+    border: 1px solid #38264b;
+    border-radius: 9px;
+    background: #191125;
+    color: #e0d5f0;
+    font-size: 14px;
   }
 }
